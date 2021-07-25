@@ -416,9 +416,10 @@ html {
   width: 375px;
 }
 .sliders__item__content_first::before {
-  background: url(../../icons/text/plate.png) center center/cover no-repeat;
-  top: -25px;
+  background: url(../icons/text/plate.png) center center/cover no-repeat;
+  top: -27px;
   right: 165px;
+  height: 52px;
 }
 .sliders__item__content_second {
   position: relative;
@@ -428,7 +429,7 @@ html {
   margin-left: 25px;
 }
 .sliders__item__content_second::before {
-  background: url(../../icons/text/notebad.png) center center/cover no-repeat;
+  background: url(../icons/text/notebad.png) center center/cover no-repeat;
   top: -25px;
   right: 110px;
 }
