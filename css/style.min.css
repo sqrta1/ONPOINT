@@ -443,6 +443,7 @@ html {
 }
 .sliders__footer__png {
   position: fixed;
+  z-index: 2;
   left: 110px;
   bottom: 20px;
   width: 100%;
