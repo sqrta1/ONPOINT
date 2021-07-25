@@ -3,4 +3,5 @@ needs to be refactored <br>
 some functions didn't make it there <br>
 ?????BEM????? <br>
 Gulp<br>
-vanilla.js
+vanilla.js <br>
+BUILDED v. 
