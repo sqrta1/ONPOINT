@@ -1,85 +1,93 @@
-// document.addEventListener('touchstart', handleTouchStart, false);        
-// document.addEventListener('touchmove', handleTouchMove, false);
-const first_item = document.getElementById('first-item');
-const second_item = document.getElementById('second-item');
-const third_item = document.getElementById('third-item');
-const content = document.getElementById('slider-content');
-const first_button =  document.getElementById('first-button');
 const logo = document.getElementById('logo');
 const modal_window = document.getElementById('modal-one');
 
 //logo 
 
-// logo.addEventListener('click', (e) => {
-//   if(second_item.classList.contains('sliders__item_active')) {
-//     first_item.classList.add('sliders__item_active');
-//     second_item.classList.remove('sliders__item_active');
-//     second_item.classList.add('sliders__item_not-active');
-//     content.classList.add('sliders_first');
-//     content.classList.remove('sliders_second')
-//   } else if (third_item.classList.contains('sliders__item_active')) {
-//     first_item.classList.add('sliders__item_active');
-//     third_item.classList.remove('sliders__item_active');
-//     third_item.classList.add('sliders__item_not-active');
-//     content.classList.add('sliders_first');
-//     content.classList.remove('sliders_third');
-//   } else {
-//     return;
-//   }
-// })
+logo.addEventListener('click', () => {
+  first_item.style.transition = 'all .4s';
+  second_item.style.transition = 'all .4s';
+  first_item.style.left = '0';
+  second_item.style.left = '100%';
+})
 
-// //first button 
+//first button 
 
-// first_button.addEventListener('click', () => {
-//     first_item.classList.remove('sliders__item_active');
-//     second_item.classList.remove('sliders__item_not-active');
-//     second_item.classList.add('sliders__item_active');
-//     content.classList.remove('sliders_first');
-//     content.classList.add('sliders_second')
-// })
+const first_button =  document.getElementById('first-button');
+first_button.addEventListener('click', () => {
+  first_item.style.transition = 'all .4s';
+  second_item.style.transition = 'all .4s';
+  first_item.style.left = '-100%';
+  second_item.style.left = '0';
+  first_item.style.display = 'block';
+})
 
-//swipe
+//swipe <-- Working only for 2 sliders rn -->
 
-// let xDown = null;                                                        
-// let yDown = null;
+const first_item = document.getElementById('first-item');
+const second_item = document.getElementById('second-item');
+const third_item = document.getElementById('third-item');
 
-// function getTouches(evt) {
-//   return evt.touches ||             
-//          evt.originalEvent.touches; 
-// }                                                     
+let startingX;
 
-// function handleTouchStart(evt) {
-//     const firstTouch = getTouches(evt)[0];                                      
-//     xDown = firstTouch.clientX;                                      
-//     yDown = firstTouch.clientY;                                      
-// };                                                
+first_item.addEventListener('touchstart', e =>  {
+  startingX = e.touches[0].clientX
+});
+first_item.addEventListener('touchmove', e => {
+  e.preventDefault();
+  let touch = e.touches[0];
+  let change = startingX - touch.clientX;
+  if (change < 0) {
+    return;
+  }
+  first_item.style.left = '-' + change + 'px';
+  second_item.style.display = 'block';
+  second_item.style.left = (screen.width - change) + 'px';
+});
+first_item.addEventListener('touchend', e => {
+  let change = startingX - e.changedTouches[0].clientX;
+  let threshold = screen.width / 20;
+  if (change < threshold) {
+    first_item.left = 0;
+  } else {
+    first_item.style.transition = 'all .4s';
+    second_item.style.transition = 'all .4s';
+    first_item.style.left = '-100%';
+    second_item.style.left = '0';
+    second_item.style.display = 'block';
+  }
+}, );
 
-
-// function handleTouchMove(evt) {
-//     if ( ! xDown || ! yDown ) {
-//         return;
-//     }
-
-//     let xUp = evt.touches[0].clientX;                                    
-//     let yUp = evt.touches[0].clientY;
-
-//     let xDiff = xDown - xUp;
-//     let yDiff = yDown - yUp;
-
-//     if ( Math.abs( xDiff ) > Math.abs( yDiff ) &&  !(modal_window.classList.contains('open')) ) { //проверка на открытое модальное окно
-//         if (xDiff > 0 && second_item.classList.contains('sliders__item_active')){;
-//             third_item.classList.add('sliders__item_active');
-//         } else if ( xDiff > 0 && first_item.classList.contains('sliders__item_active')) {
-//             second_item.classList.add('sliders__item_active');
-//         } else if (xDiff < 0 && third_item.classList.contains('sliders__item_active')){
-//             second_item.classList.add('sliders__item_active');
-//         } else if (xDiff < 0 && second_item.classList.contains('sliders__item_active')) {
-//             first_item.classList.add('sliders__item_active');
-//         }               
-//     } 
-
-//     xDown = null;                                             
-// };
+second_item.addEventListener('touchstart', (e) => {
+  startingX = e.touches[0].clientX;
+  first_item.style.transition = '';
+  second_item.style.transition = '';
+  first_item.style.display = 'none';
+});
+second_item.addEventListener('touchmove', e => {
+  e.preventDefault();
+  let touch = e.touches[0];
+  let change = touch.clientX - startingX;
+  if (change < 0) {
+    return;
+  }
+  first_item.style.display = 'block';
+  first_item.left = (change - screen.width) + 'px';
+  second_item.left = change + 'px';
+});
+second_item.addEventListener('touchend', e => {
+  let change = e.changedTouches[0].clientX - startingX;
+  let threshold = screen.width / 20;
+  if (change < threshold) {
+    first_item.style.left = '-100%';
+    first_item.display = 'none';
+    second_item.left = '0';
+  } else {
+     first_item.style.transition = 'all .4s';
+     second_item.style.transition = 'all .4s';
+     first_item.style.left = '0';
+     second_item.style.left = '100%';
+   }
+});
 
 //modal window
 
@@ -137,13 +145,45 @@ function swapBenefits() {
 
 swapBenefits();
 
-//scroll 
+//scroll <--Working with mouse only rn/ no touches-->
 
-function scroll() {
-  const scroll_thumb = document.getElementById('scroll-thumb');
-  if (scroll_thumb) {
-    scroll_thumb.addEventListener('mousedown', () => {
-      console.log('hey')
-    })
+const slider = document.getElementById('scrollbar');
+const thumb = document.getElementById('thumb');
+const textarea = document.getElementById('text');
+
+thumb.addEventListener('mousedown' , event => {
+  event.preventDefault();
+  let shiftY = event.clientY - thumb.getBoundingClientRect().top;
+    
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+
+  function onMouseMove(event) {
+    let newTop = event.clientY - shiftY - slider.getBoundingClientRect().top;
+
+        
+    if (newTop < 0) {
+        newTop = 0;
+    }
+    let topEdge = slider.offsetHeight - thumb.offsetHeight;
+    
+    if (newTop > topEdge) {
+        newTop = topEdge;
+    }
+
+    thumb.style.top = newTop + 'px';
   }
-}
+
+  function onMouseUp() {
+    document.removeEventListener('mouseup', onMouseUp);
+    document.removeEventListener('mousemove', onMouseMove);
+  }
+
+
+})
+
+
+thumb.addEventListener('dragstart', () => {
+    return false;
+})
