@@ -4,24 +4,29 @@ const modal_window = document.getElementById('modal-one');
 //logo 
 
 logo.addEventListener('click', () => {
-  first_item.style.transition = 'all .4s';
-  second_item.style.transition = 'all .4s';
-  first_item.style.left = '0';
-  second_item.style.left = '100%';
+  if (modal_window.classList.contains('open')) {
+    return;
+  }
+    first_item.style.transition = 'all .15s linear';
+    second_item.style.transition = 'all .15s linear';
+    third_item.style.transition = 'all .15s linear';
+    first_item.style.left = '0';
+    second_item.style.left = '100%';
+    third_item.style.left = '200%';
 })
 
 //first button 
 
 const first_button =  document.getElementById('first-button');
 first_button.addEventListener('click', () => {
-  first_item.style.transition = 'all .4s';
-  second_item.style.transition = 'all .4s';
+  first_item.style.transition = 'all .15s linear';
+  second_item.style.transition = 'all .15s linear';
   first_item.style.left = '-100%';
   second_item.style.left = '0';
   first_item.style.display = 'block';
 })
 
-//swipe <-- Working only for 2 sliders rn -->
+//swipe
 
 const first_item = document.getElementById('first-item');
 const second_item = document.getElementById('second-item');
@@ -40,7 +45,6 @@ first_item.addEventListener('touchmove', e => {
     return;
   }
   first_item.style.left = '-' + change + 'px';
-  second_item.style.display = 'block';
   second_item.style.left = (screen.width - change) + 'px';
 });
 first_item.addEventListener('touchend', e => {
@@ -49,46 +53,116 @@ first_item.addEventListener('touchend', e => {
   if (change < threshold) {
     first_item.left = 0;
   } else {
-    first_item.style.transition = 'all .4s';
-    second_item.style.transition = 'all .4s';
+    first_item.style.transition = 'all .15s linear';
+    second_item.style.transition = 'all .15s linear';
+    third_item.style.transition = 'all .15s linear';
     first_item.style.left = '-100%';
     second_item.style.left = '0';
-    second_item.style.display = 'block';
+    third_item.style.left = '100%';
   }
 }, );
 
 second_item.addEventListener('touchstart', (e) => {
   startingX = e.touches[0].clientX;
-  first_item.style.transition = '';
-  second_item.style.transition = '';
-  first_item.style.display = 'none';
 });
 second_item.addEventListener('touchmove', e => {
+  function left(e) {
+    e.preventDefault();
+    let touch = e.touches[0];
+    let change = touch.clientX - startingX;
+    if (change < 0) {
+      return;
+    }
+    first_item.left = (change - screen.width) + 'px';
+    second_item.left = change + 'px';
+  };
+  
+  function right(e) {
+    e.preventDefault();
+    let touch = e.touches[0];
+    let change = startingX - touch.clientX;
+    if (change < 0) {
+      return;
+    }
+    second_item.style.left = '-' + change + 'px';
+    third_item.style.left = (screen.width - change) + 'px';
+  };
+
+  left(e);
+  right(e);
+});
+second_item.addEventListener('touchend', e => {
+  function left(e) {
+    let change = e.changedTouches[0].clientX - startingX;
+    let threshold = screen.width / 20;
+    if (change < threshold) {
+      first_item.style.left = '-100%';
+      second_item.left = '0';
+    } else {
+      first_item.style.transition = 'all .15s linear';
+      second_item.style.transition = 'all .15s linear';
+      third_item.style.transition = 'all .15s linear';
+      first_item.style.left = '0';
+      second_item.style.left = '100%';
+      third_item.style.left = '200%';
+   }
+  };
+
+  function right(e) {
+    
+    let change = startingX - e.changedTouches[0].clientX;
+    let threshold = screen.width / 20;
+    if (change < threshold) {
+      second_item.left = 0;
+    } else {
+      second_item.style.transition = 'all .15s linear';
+      third_item.style.transition = 'all .15s linear';
+      first_item.style.left = '-200%';
+      second_item.style.left = '-100%';
+      third_item.style.left = '0';
+    }
+  };
+
+  right(e);
+  left(e);
+});
+
+third_item.addEventListener('touchstart', e =>  {
+  startingX = e.touches[0].clientX
+});
+
+third_item.addEventListener('touchmove', e => { 
   e.preventDefault();
   let touch = e.touches[0];
   let change = touch.clientX - startingX;
   if (change < 0) {
     return;
   }
-  first_item.style.display = 'block';
-  first_item.left = (change - screen.width) + 'px';
-  second_item.left = change + 'px';
-});
-second_item.addEventListener('touchend', e => {
-  let change = e.changedTouches[0].clientX - startingX;
-  let threshold = screen.width / 20;
-  if (change < threshold) {
-    first_item.style.left = '-100%';
-    first_item.display = 'none';
-    second_item.left = '0';
-  } else {
-     first_item.style.transition = 'all .4s';
-     second_item.style.transition = 'all .4s';
-     first_item.style.left = '0';
-     second_item.style.left = '100%';
-   }
-});
+  second_item.style.display = 'block';
+  second_item.left = (change - screen.width) + 'px';
+  third_item.left = change + 'px';
+})
 
+third_item.addEventListener('touchend', e => { 
+  if (modal_window.classList.contains('open')) {
+    return;
+  } else {
+    let change = e.changedTouches[0].clientX - startingX;
+    let threshold = screen.width / 20;
+    if (change < threshold) {
+      second_item.style.left = '-100%';
+      second_item.display = 'none';
+      third_item.left = '0';
+    } else {
+      first_item.style.transition = 'all .15s linear';
+      second_item.style.transition = 'all .15s linear';
+      third_item.style.transition = 'all .15s linear';
+      first_item.style.left = '-100%';
+      second_item.style.left = '0';
+      third_item.style.left = '100%';
+   }
+  }
+})
 //modal window
 
 const modals = document.querySelectorAll('[data-modal]');
