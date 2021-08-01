@@ -47,7 +47,7 @@ first_item.addEventListener('touchmove', e => {
 });
 first_item.addEventListener('touchend', e => {
   let change = startingX - e.changedTouches[0].clientX;
-  let threshold = screen.width / 20;
+  let threshold = screen.width / 10;
   if (change < threshold) {
     first_item.left = 0;
   } else {
@@ -88,7 +88,7 @@ second_item.addEventListener('touchmove', e => {
 second_item.addEventListener('touchend', e => {
   function left(e) {
     let change = e.changedTouches[0].clientX - startingX;
-    let threshold = screen.width / 20;
+    let threshold = screen.width / 10;
     if (change < threshold) {
       first_item.style.left = '-100%';
       second_item.left = '0';
@@ -105,7 +105,7 @@ second_item.addEventListener('touchend', e => {
   function right(e) {
     
     let change = startingX - e.changedTouches[0].clientX;
-    let threshold = screen.width / 20;
+    let threshold = screen.width / 10;
     if (change < threshold) {
       second_item.left = 0;
     } else {
@@ -139,7 +139,7 @@ third_item.addEventListener('touchend', e => {
     return;
   } else {
     let change = e.changedTouches[0].clientX - startingX;
-    let threshold = screen.width / 20;
+    let threshold = screen.width / 10;
     if (change < threshold) {
       second_item.style.left = '-100%';
       second_item.display = 'none';
