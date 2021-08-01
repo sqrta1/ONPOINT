@@ -44,8 +44,6 @@ first_item.addEventListener('touchmove', e => {
   if (change < 0) {
     return;
   }
-  first_item.style.left = '-' + change + 'px';
-  second_item.style.left = (screen.width - change) + 'px';
 });
 first_item.addEventListener('touchend', e => {
   let change = startingX - e.changedTouches[0].clientX;
@@ -73,8 +71,6 @@ second_item.addEventListener('touchmove', e => {
     if (change < 0) {
       return;
     }
-    first_item.left = (change - screen.width) + 'px';
-    second_item.left = change + 'px';
   };
   
   function right(e) {
@@ -84,8 +80,6 @@ second_item.addEventListener('touchmove', e => {
     if (change < 0) {
       return;
     }
-    second_item.style.left = '-' + change + 'px';
-    third_item.style.left = (screen.width - change) + 'px';
   };
 
   left(e);
@@ -138,9 +132,6 @@ third_item.addEventListener('touchmove', e => {
   if (change < 0) {
     return;
   }
-  second_item.style.display = 'block';
-  second_item.left = (change - screen.width) + 'px';
-  third_item.left = change + 'px';
 })
 
 third_item.addEventListener('touchend', e => { 
@@ -219,24 +210,26 @@ function swapBenefits() {
 
 swapBenefits();
 
-//scroll <--Working with mouse only rn/ no touches-->
+//scroll
 
 const slider = document.getElementById('scrollbar');
 const thumb = document.getElementById('thumb');
 const textarea = document.getElementById('text');
+const textareaChild = document.getElementById('text_child');
+let sliderHeight = slider.getBoundingClientRect().bottom - slider.getBoundingClientRect().top;
+let thumbHeight = thumb.getBoundingClientRect().bottom - thumb.getBoundingClientRect().top; 
 
-thumb.addEventListener('mousedown' , event => {
+thumb.addEventListener('touchstart' , event => {
   event.preventDefault();
-  let shiftY = event.clientY - thumb.getBoundingClientRect().top;
+  let shiftY = event.touches[0].clientY - thumb.getBoundingClientRect().top;
     
 
-  document.addEventListener('mousemove', onMouseMove);
-  document.addEventListener('mouseup', onMouseUp);
+  document.addEventListener('touchmove', onTouchMove);
+  document.addEventListener('touchend', onTouchEnd);
 
-  function onMouseMove(event) {
-    let newTop = event.clientY - shiftY - slider.getBoundingClientRect().top;
-
-        
+  function onTouchMove(event) {
+    let newTop = event.changedTouches[0].clientY - shiftY - slider.getBoundingClientRect().top;
+    
     if (newTop < 0) {
         newTop = 0;
     }
@@ -246,18 +239,16 @@ thumb.addEventListener('mousedown' , event => {
         newTop = topEdge;
     }
 
+    const shiftProc = newTop / (sliderHeight - thumbHeight);
+
     thumb.style.top = newTop + 'px';
+    textareaChild.style.top = '-' + ((textarea.getBoundingClientRect().bottom - textarea.getBoundingClientRect().top -120) * shiftProc) + 'px';
   }
 
-  function onMouseUp() {
-    document.removeEventListener('mouseup', onMouseUp);
-    document.removeEventListener('mousemove', onMouseMove);
+  function onTouchEnd() {
+    document.removeEventListener('touchend', onTouchEnd);
+    document.removeEventListener('touchmove', onTouchMove);
   }
 
 
-})
-
-
-thumb.addEventListener('dragstart', () => {
-    return false;
 })

@@ -736,9 +736,12 @@ html {
   left: 60px;
   bottom: 0;
   white-space: normal;
-  overflow: scroll;
-  overflow-x: hidden;
+  overflow: hidden;
   direction: rtl;
   border-bottom: 25px solid #fff;
   border-top: 25px solid #fff;
+}
+
+.scrollbar__text__child {
+  position: relative;
 }
